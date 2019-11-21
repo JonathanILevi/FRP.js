@@ -13,9 +13,6 @@ class Cell extends C.Cell {
 	map(f) {
 		throw Error("Map not currently allowed on Hybrid Cell");
 	}
-	forEach(f) {
-		throw Error("ForEach not currently allowed on Hybrid Cell");
-	}
 }
 
 class RootCell extends Cell {
