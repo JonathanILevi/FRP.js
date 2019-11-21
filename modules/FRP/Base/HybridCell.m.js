@@ -1,6 +1,6 @@
 import * as C from "./Cell.m.js";
 
-export {Cell};
+export {Cell,RootCell};
 
 class Cell extends C.Cell {
 	constructor (...args) {
@@ -15,6 +15,12 @@ class Cell extends C.Cell {
 	}
 	forEach(f) {
 		throw Error("ForEach not currently allowed on Hybrid Cell");
+	}
+}
+
+class RootCell extends Cell {
+	change(value) {
+		this._root.send(value);
 	}
 }
 
