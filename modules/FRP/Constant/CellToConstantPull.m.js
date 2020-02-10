@@ -4,7 +4,7 @@ import * as PC from "./ConstantPullCell.m.js";
 EnumCell.prototype.cache = function() {
 	let value = this.initial;
 	this.forEach(v=>value=v);
-	return new PC.enumCell(()=>value,this.values);
+	return new PC.enumCell(()=>value,this.possibilities);
 }
 ConstantChangingCell.prototype.cache = function() {
 	return new PC.constantCell(this.value);

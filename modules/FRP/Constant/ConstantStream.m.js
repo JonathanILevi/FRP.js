@@ -9,19 +9,19 @@ export {merge,};
 
 
 class EnumStream extends Stream {
-	constructor(values,...args) {
+	constructor(possibilities,...args) {
 		super(...args);
-		this.values = values;
+		this.possibilities = possibilities;
 	}
 	map(f) {
-		let n = makeEnumStream(this.values.map(f),this._root);
+		let n = makeEnumStream(this.possibilities.map(f),this._root);
 		this._root.addNode((scope)=>{
 			scope[n.nodeIdentifier]=f(scope[this.nodeIdentifier]);
 		});
 		return n;
 	}
 	filter(f) {
-		let n = makeEnumStream(this.values.filter(f),partialRoot(this._root),this.nodeIdentifier);
+		let n = makeEnumStream(this.possibilities.filter(f),partialRoot(this._root),this.nodeIdentifier);
 		this._root.addNode(scope=>{
 			if (f(scope[this.nodeIdentifier]))
 				s._root.sendScope(scope);
@@ -33,12 +33,12 @@ class EnumStream extends Stream {
 	}
 }
 class RootEnumStream extends EnumStream {
-	constructor(values) {
+	constructor(possibilities) {
 		let nodeId = Symbol();
-		super(values,newRoot(nodeId),nodeId);
+		super(possibilities,newRoot(nodeId),nodeId);
 	}
 	send(value) {
-		if (this.values.indexOf(value)!=-1)
+		if (this.possibilities.indexOf(value)!=-1)
 			this._root.send(value);
 		else
 			console.assert(false);
@@ -51,7 +51,7 @@ class ConstantStream extends EnumStream {
 		super([value],...args);
 	}
 	get value() {
-		return this.values[0];
+		return this.possibilities[0];
 	}
 	map(f) {
 		let n = makeConstantStream(f(this.value),this._root);
@@ -107,13 +107,13 @@ function constantStream(value) {
 ConstantStream.stream = constantStream;
 Stream.constant = constantStream;
 
-function enumStream(values) {
-	if (values.length==0)
+function enumStream(possibilities) {
+	if (possibilities.length==0)
 		return never();
-	else if (values.length==1)
-		return constantStream(values[0]);
+	else if (possibilities.length==1)
+		return constantStream(possibilities[0]);
 	else
-		return new RootEnumStream(values);
+		return new RootEnumStream(possibilities);
 }
 EnumStream.stream = enumStream;
 Stream.enum = enumStream;
@@ -132,17 +132,17 @@ function makeConstantStream(value,root=null,nnid=null) {
 		root = newRoot(nnid);
 	return new ConstantStream(value,root,nnid);
 }
-function makeEnumStream(values,root=null,nnid=null) {
-	if (values.length==0)
+function makeEnumStream(possibilities,root=null,nnid=null) {
+	if (possibilities.length==0)
 		return makeNeverStream(root,nnid);
-	else if (values.length==1)
-		return makeConstantStream(values[0],root,nnid);
+	else if (possibilities.length==1)
+		return makeConstantStream(possibilities[0],root,nnid);
 	else {
 		if (nnid==null)
 			nnid = Symbol();
 		if (root==null)
 			root = newRoot(nnid);
-		return new EnumStream(values,root,nnid);
+		return new EnumStream(possibilities,root,nnid);
 	}
 }
 
@@ -150,7 +150,7 @@ function merge(...streams) {
 	if (streams.all(s=>s instanceof EnumStream)) {
 		console.assert(compareRoots(...streams.map(s=>s._root)) == discrete);
 		let nnid=Symbol();
-		return new EnumStream(streams.concatMap(s=>s.values),joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier])),nnid);
+		return new EnumStream(streams.concatMap(s=>s.possibilities),joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier])),nnid);
 	}
 	else {
 		return basicMerge(...streams);

@@ -14,9 +14,9 @@ ConstantStream.prototype.hold = function(initial) {
 }
 
 EnumStream.prototype.hold = function(initial) {
-	let values = this.values;
-	if (values.indexOf(initial)==-1)
-		values = [initial,...values]; // Not pushing due to mutation.
-	return makeEnumCell(initial,values,this._root,this.nodeIdentifier);
+	let possibilities = this.possibilities;
+	if (possibilities.indexOf(initial)==-1)
+		possibilities = [initial,...possibilities]; // Not pushing due to mutation.
+	return makeEnumCell(initial,possibilities,this._root,this.nodeIdentifier);
 }
 

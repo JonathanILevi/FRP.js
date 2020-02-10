@@ -3,17 +3,17 @@ import {Cell} from "../Base/PullCell.m.js";
 export {EnumCell,ConstantCell,enumCell,constantCell};
 
 class EnumCell extends Cell {
-	constructor (callback, values) {
+	constructor (callback, possibilities) {
 		super(callback);
 		this._callback = callback;
-		this.values = values;
+		this.possibilities = possibilities;
 	}
 	map(f) {
-		return new EnumCell(()=>f(callback()),this.values.map(f));
+		return new EnumCell(()=>f(callback()),this.possibilities.map(f));
 	}
 	grab() {
 		let v = this._callback();
-		if (this.values.indexOf(v)!=-1)
+		if (this.possibilities.indexOf(v)!=-1)
 			return v;
 		else
 			console.assert(false);
@@ -24,7 +24,7 @@ class ConstantCell extends EnumCell {
 		super(()=>console.assert(false,"Why is this being called?!"),[value]);
 	}
 	get value() {
-		return this.values[0];
+		return this.possibilities[0];
 	}
 	map(f) {
 		return new ConstantCell(f(this.value));
@@ -34,8 +34,8 @@ class ConstantCell extends EnumCell {
 	}
 }
 
-function enumCell(callback,values) {
-	return new Cell(callback,values);
+function enumCell(callback,possibilities) {
+	return new Cell(callback,possibilities);
 }
 EnumCell.cell = enumCell;
 Cell.enum = enumCell;

@@ -3,9 +3,9 @@ import {EnumCell} from "./ConstantCell.m.js";
 import {partialRoot,joinRoots} from "../Core/PushRoot.m.js";
 
 EnumCell.prototype.switch = function() {
-	if (this.values.all(v=>v instanceof Cell))
+	if (this.possibilities.all(v=>v instanceof Cell))
 		return this.switchC();
-	if (this.values.all(v=>v instanceof Stream))
+	if (this.possibilities.all(v=>v instanceof Stream))
 		return this.switchS();
 	console.assert(false);
 }
@@ -18,7 +18,7 @@ EnumCell.prototype.switchC = function() {
 		scope[nnid] = scope[this.nodeIdentifier].grab();
 	});
 	
-	let valueRoots = this.values.map(v=>{
+	let valueRoots = this.possibilities.map(v=>{
 		let vRoot = partialRoot(v._root);
 		v._root.addNode(scope=>{
 			if (v==current) {

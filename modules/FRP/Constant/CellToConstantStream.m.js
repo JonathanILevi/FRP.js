@@ -9,7 +9,7 @@ ConstantChangingCell.prototype.changes = function() {
 	return makeConstantStream(this.value,this._root,this.nodeIdentifier);
 }
 EnumCell.prototype.changes = function() {
-	return makeEnumStream(this.values,this._root,this.nodeIdentifier);
+	return makeEnumStream(this.possibilities,this._root,this.nodeIdentifier);
 }
 
 

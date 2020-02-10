@@ -8,12 +8,12 @@ export {RootEnumCell,EnumCell,enumCell,makeEnumCell,};
 
 
 class EnumCell extends Cell {
-	constructor(initial,values,...args) {
+	constructor(initial,possibilities,...args) {
 		super(initial,...args);
-		this.values = values;
+		this.possibilities = possibilities;
 	}
 	map(f) {
-		let n = makeEnumCell(f(this.initial),this.values.map(f),this._root);
+		let n = makeEnumCell(f(this.initial),this.possibilities.map(f),this._root);
 		this._root.addNode((scope)=>{
 			scope[n.nodeIdentifier]=f(scope[this.nodeIdentifier]);
 		});
@@ -21,12 +21,12 @@ class EnumCell extends Cell {
 	}
 }
 class RootEnumCell extends EnumCell {
-	constructor(initial, values) {
+	constructor(initial, possibilities) {
 		let nodeId = Symbol();
-		super(initial, values, newRoot(nodeId), nodeId);
+		super(initial, possibilities, newRoot(nodeId), nodeId);
 	}
 	change(value) {
-		if (this.values.indexOf(value)!=-1)
+		if (this.possibilities.indexOf(value)!=-1)
 			this._root.send(value);
 		else
 			console.assert(false);
@@ -38,7 +38,7 @@ class ConstantChangingCell extends EnumCell {
 		super(value, [value],...args);
 	}
 	get value() {
-		return this.values[0];
+		return this.possibilities[0];
 	}
 	map(f) {
 		let n = makeConstantChangingCell(f(this.value),this._root);
@@ -80,16 +80,16 @@ function constantChangingCell(value) {
 ConstantChangingCell.cell = constantChangingCell;
 Cell.changingConstant = constantChangingCell;
 
-function enumCell(initial,values) {
-	if (values.length==0)
+function enumCell(initial,possibilities) {
+	if (possibilities.length==0)
 		console.assert(false, "Cannot have an EnumCell without any possible values.");
-	else if (values.indexOf(initial)==-1)
+	else if (possibilities.indexOf(initial)==-1)
 		console.assert(false, "Inital value must be in possible values.");
 	else {
-		if (values.length==1)
-			return constantCell(values[0]);
+		if (possibilities.length==1)
+			return constantCell(possibilities[0]);
 		else
-			return new RootEnumCell(initial,values);
+			return new RootEnumCell(initial,possibilities);
 	}
 }
 EnumCell.cell = enumCell;
@@ -109,20 +109,20 @@ function makeConstantChangingCell(value,root=null,nnid=null) {
 		root = newDeadRoot(nnid);
 	return new ConstantChangingCell(value,root,nnid);
 }
-function makeEnumCell(initial,values,root=null,nnid=null) {
-	if (values.length==0)
+function makeEnumCell(initial,possibilities,root=null,nnid=null) {
+	if (possibilities.length==0)
 		console.assert(false, "Cannot have an EnumCell without any possible values.");
-	else if (values.indexOf(initial)==-1)
+	else if (possibilities.indexOf(initial)==-1)
 		console.assert(false, "Inital value must be in possible values.");
 	else {
-		if (values.length==1)
-			return makeConstantChangingCell(values[0],root,nnid);
+		if (possibilities.length==1)
+			return makeConstantChangingCell(possibilities[0],root,nnid);
 		else {
 			if (nnid==null)
 				nnid = Symbol();
 			if (root==null)
 				root = newRoot(nnid);
-			return new EnumCell(initial,values,root,nnid);
+			return new EnumCell(initial,possibilities,root,nnid);
 		}
 	}
 }
