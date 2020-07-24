@@ -17,7 +17,7 @@ Stream.prototype.thenOrdered = function() {
 Stream.prototype.thenUnordered = function() {
 	let n = makeStream();
 	this.forEach(pValue=>{
-		pValue.then(v=>n._root.send(v));
+		pValue.then(v=>n._root.send(v)).catch(_=>{});
 	});
 	return n;
 }
@@ -39,4 +39,10 @@ Stream.prototype.thenLatest = function() {
 		promise.then((...args)=>{if(notCanceled) f(...args);});
 		return ()=>notCanceled=false;
 	}
+}
+
+export function promiseToStream(p) {
+	let s = makeStream();
+	p.then(v=>s._root.send(v)).catch(_=>{});
+	return s;
 }

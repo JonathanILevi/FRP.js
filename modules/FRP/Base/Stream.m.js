@@ -1,7 +1,7 @@
 import {Push} from "../Core/Push.m.js";
 import {newRoot,newDeadRoot,joinRoots,joinRootsMap,partialRoot,compareRoots,same,overlapping,discrete} from "../Core/PushRoot.m.js";
 
-export {RootStream,Stream,stream,never,merge,};
+export {RootStream,Stream,stream,never,/***merge,*/};
 export {makeStream,makeNeverStream};
 
 class Stream extends Push {
@@ -85,9 +85,10 @@ function makeNeverStream(root=null,nnid=null) {
 	return new NeverStream(root,nnid);
 }
 
-function merge(...streams) {
-	console.assert(compareRoots(...streams.map(s=>s._root)) == discrete);
-	let nnid=Symbol();
-	return new Stream(joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier])),nnid);
-}
+// More generally defined in Base/StreamWithCell
+////function merge(...streams) {
+////	console.assert(compareRoots(...streams.map(s=>s._root)) == discrete);
+////	let nnid=Symbol();
+////	return new Stream(joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier])),nnid);
+////}
 
