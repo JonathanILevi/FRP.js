@@ -19,6 +19,9 @@ class RootCell extends Cell {
 	change(value) {
 		this._root.send(value);
 	}
+	modify(f) {
+		this.change(f(this.grab()));
+	}
 }
 
 
