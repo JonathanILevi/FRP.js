@@ -7,7 +7,7 @@ import {joinRootsMap,compareRoots,same,overlapping,discrete} from "../Core/PushR
 export {merge,};
 
 Stream.prototype.snapshot = function(c,f=(s,c)=>c) {
-	if (compareRoots(this._root)==same)
+	if (compareRoots(this._root, c._root)==same)
 		return c.changes();
 	if (c instanceof Cell)
 		c = c.cache();
