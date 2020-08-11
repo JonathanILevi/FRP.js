@@ -13,7 +13,7 @@ import {} from "./Constant/StreamWithConstant.m.js";
 import {} from "./Constant/StreamToConstantCell.m.js";
 
 import {map} from "./Base/Shared.m.js";
-import {lift,liftAny} from "./Base/Lift.m.js";
+import {lift, iLift,liftAny} from "./Base/Lift.m.js";
 
 /* Override default merge which does not have handling for `ConstantStream`s. */
 Stream.merge = function (...streams) {
@@ -26,7 +26,7 @@ export	{ RootStream,Stream,stream,never
 	, promiseToStream
 	, merge
 	, map
-	, lift, liftAny
+	, lift, iLift, liftAny
 	, eventStream
 	}
 

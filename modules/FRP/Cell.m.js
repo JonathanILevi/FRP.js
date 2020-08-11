@@ -19,7 +19,7 @@ import {} from "./Constant/CellToConstantStream.m.js";
 import {} from "./Constant/CellSwitch.m.js";
 
 import {map} from "./Base/Shared.m.js";
-import {lift} from "./Base/Lift.m.js";
+import {lift, iLift} from "./Base/Lift.m.js";
 
 let constant = constantCell;
 
@@ -31,7 +31,7 @@ export {
 	RootEnumCell,EnumCell,enumCell,
 	promiseToCell,
 	map,
-	lift,
+	lift, iLift,
 	cellEl,
 	asCell,
 }

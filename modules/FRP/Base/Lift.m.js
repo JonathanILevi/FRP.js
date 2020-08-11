@@ -5,7 +5,7 @@ import {Cell,makeCell} from "./Cell.m.js";
 import * as PC from "./PullCell.m.js";
 import * as HC from "./HybridCell.m.js";
 
-export {map, lift, liftAny};
+export {map, lift, iLift, liftAny};
 
 function map(f, m) {
 	m.map(f);
@@ -61,6 +61,10 @@ function lift(f) {
 			streamRoot.addNode(scope=>scope[nnid]=f(...retrieveArgs.map(ra=>ra(scope))));
 		}
 	};
+}
+
+function iLift(...args) {
+	return (f)=>lift(f)(...args);
 }
 
 function liftAny(f) {

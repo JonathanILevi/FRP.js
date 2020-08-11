@@ -22,6 +22,10 @@ class RootCell extends Cell {
 	modify(f) {
 		this.change(f(this.grab()));
 	}
+	impureModify(f) {
+		f(this.grab())
+		this.change(this.grab());
+	}
 }
 
 
