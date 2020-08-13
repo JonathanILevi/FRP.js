@@ -19,14 +19,14 @@ function lift(f) {
 		if (streamArgs.length > 0) {
 			console.assert(streamArgs.length==1 || compareRoots(...streamArgs)==same);
 			let n = makeStream(streamArgs[0]._root,Symbol());
-			forStreamRoot(n._root, n.nodeIdentifier);
+			forStreamRoot(n._root, n.nodeIdentifier, n._root);
 			return n;
 		}
 		else {
 			let pushArgs = args.filter(a=>(a instanceof Cell || a instanceof HC.Cell));
 			let roots = [pushArgs[0]._root];
 			pushArgs.tail().forEach((a,i)=>{
-				if (!pushArgs.slice(0,i).any(t=>compareRoots(a._root,t._root)==same))
+				if (!pushArgs.slice(0,i+1).any(t=>compareRoots(a._root,t._root)==same))
 					roots.push(a._root);
 			});
 			
@@ -38,11 +38,11 @@ function lift(f) {
 					?a.grab()
 					:a/*assume constant*/)
 			)),joinRoots(nnid,roots),nnid);
-			roots.forEach(r=>forStreamRoot(r, nnid));
+			roots.forEach(r=>forStreamRoot(r, nnid, n._root));
 			return n;
 		}
 		
-		function forStreamRoot(streamRoot, nnid) {
+		function forStreamRoot(streamRoot, nnid, newRoot) {
 			let retrieveArgs = args.map(a=>{
 				if (a instanceof PC.Cell || a instanceof HC.Cell)
 					return _=>a.grab();
@@ -58,7 +58,7 @@ function lift(f) {
 					return _=>a;
 				}
 			});
-			streamRoot.addNode(scope=>scope[nnid]=f(...retrieveArgs.map(ra=>ra(scope))));
+			streamRoot.addNode(scope=>newRoot.sendScope({[nnid]:f(...retrieveArgs.map(ra=>ra(scope)))}));
 		}
 	};
 }
@@ -72,7 +72,7 @@ function liftAny(f) {
 		let pushArgs = args.filter(a=>(a instanceof Stream || a instanceof Cell || a instanceof HC.Cell));
 		let roots = [pushArgs[0]._root];
 		pushArgs.tail().forEach((a,i)=>{
-			if (!pushArgs.slice(0,i).any(t=>compareRoots(a._root,t._root)==same))
+			if (!pushArgs.slice(0,i+1).any(t=>compareRoots(a._root,t._root)==same))
 				roots.push(a._root);
 		});
 		
@@ -84,7 +84,7 @@ function liftAny(f) {
 				?a.grab()
 				:a/*assume constant*/)
 		)),joinRoots(nnid,roots),nnid);
-		roots.forEach(r=>forStreamRoot(r, nnid));
+		roots.forEach(r=>forStreamRoot(r, nnid, n._root));
 		return n;
 		
 		function forStreamRoot(streamRoot, nnid) {
@@ -106,7 +106,7 @@ function liftAny(f) {
 					return _=>a;
 				}
 			});
-			streamRoot.addNode(scope=>scope[nnid]=f(...retrieveArgs.map(ra=>ra(scope))));
+			streamRoot.addNode(scope=>newRoot.sendScope({[nnid]:f(...retrieveArgs.map(ra=>ra(scope)))}));
 		}
 	};
 }

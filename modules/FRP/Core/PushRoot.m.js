@@ -20,23 +20,24 @@ class Root {
 		this.nodes.forEach(n=>n(scope));
 	}
 }
-class JoinedRoot {
+class JoinedRoot extends Root {
 	constructor(roots,nodeIdentifier) {
-		this.nodeIdentifier = nodeIdentifier;
+		super(nodeIdentifier);
 		this.roots = roots;
 	}
-	addNode(callback) {
-		this.roots.forEach(r=>r.addNode(callback));
-	}
-	unsafeRemoveNode(callback) {
-		this.roots.forEach(r=>r.unsafeRemoveNode(callback));
-	}
+	////addNode(callback) {
+	////	this.roots.forEach(r=>r.addNode(callback));
+	////}
+	////unsafeRemoveNode(callback) {
+	////	this.roots.forEach(r=>r.unsafeRemoveNode(callback));
+	////}
 	send() {
 		console.assert(false);
 	}
-	sendScope(scope) {
-		this.roots.forEach(r=>r.sendScope(scope));
-	}
+	////sendScope(scope) {
+	////	console.log("sendScope Joined");
+	////	this.roots.forEach(r=>r.sendScope(scope));
+	////}
 }
 class PartialRoot extends Root {
 	constructor(root) {
@@ -60,10 +61,10 @@ function newDeadRoot() {
 function joinRoots(nodeIdentifier,roots) {
 	roots = new Set(roots);
 	roots = roots.concatMap(r=>r.constructor == JoinedRoot?r.roots:[r]);
-	if (roots.size>1)
-		return new JoinedRoot(roots);
-	else
-		return [...roots][0];
+	////if (roots.size>1)
+		return new JoinedRoot(roots, nodeIdentifier);
+	////else
+	////	return [...roots][0];
 }
 function joinRootsMap(nodeIdentifier,rootIdentifierPairs) {
 	rootIdentifierPairs = new Set(rootIdentifierPairs);
@@ -82,9 +83,9 @@ function partialRoot(root) {
 		return new PartialRoot(root.root);
 }
 
-let same = Symbol();
-let overlapping = Symbol();
-let discrete = Symbol();
+let same = Symbol("same");
+let overlapping = Symbol("overlapping");
+let discrete = Symbol("discrete");
 
 function compareRoots(...roots) {
 	console.assert(roots.length>=2,"Cannot compare less than 2 roots?!");
