@@ -29,10 +29,11 @@ function merge(...streams) {
 				console.assert("`merge` cannot work with more than one cell");
 		}
 	}
+	let root = joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier]));
 	if (cell == null)
-		return new Stream(joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier])),nnid);
+		return new Stream(root, nnid);
 	else
-		return new Cell(cell.initial, joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier])),nnid);
+		return new Cell(cell.initial, root, nnid);
 }
 
 

@@ -68,11 +68,22 @@ function joinRoots(nodeIdentifier,roots) {
 }
 function joinRootsMap(nodeIdentifier,rootIdentifierPairs) {
 	rootIdentifierPairs = new Set(rootIdentifierPairs);
-	let roots = rootIdentifierPairs.concatMap(([r,id])=>r.constructor == JoinedRoot?r.roots.map(ir=>mapRoot(ir,id,nodeIdentifier)):[mapRoot(r,id,nodeIdentifier)]);
-	if (roots.size>1)
-		return new JoinedRoot(roots,nodeIdentifier);
-	else
-		return [...roots][0];
+	////let roots = rootIdentifierPairs.concatMap(
+	////	([r,id])=>	r.constructor == JoinedRoot
+	////		? r.roots.map(ir=>mapRoot(ir,id,nodeIdentifier))
+	////		: [mapRoot(r,id,nodeIdentifier)]
+	////);
+	let newRoot;
+	let roots = rootIdentifierPairs.concatMap(([r,id])=>{
+		let roots = r.constructor == JoinedRoot ? r.roots : [r];
+		roots.forEach(r=>r.addNode(scope=>newRoot.sendScope({[nodeIdentifier]:scope[id]})));
+		return roots;
+	});
+	newRoot = new JoinedRoot(roots,nodeIdentifier);
+	////if (roots.size>1)
+	return newRoot;
+	////else
+	////	return [...roots][0];
 }
 function partialRoot(root) {
 	if (root.constructor == Root || root.constructor == DeadRoot)
@@ -100,8 +111,8 @@ function compareRoots(...roots) {
 }
 
 
-function mapRoot(root,fromID,toID) {
-	root.addNode(scope=>scope[toID]=scope[fromID]);
-	return root;
-}
+////function mapRoot(root,fromID,toID) {
+////	root.addNode(scope=>scope[toID]=scope[fromID]);
+////	return root;
+////}
 
