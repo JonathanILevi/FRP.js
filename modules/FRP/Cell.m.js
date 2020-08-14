@@ -6,7 +6,7 @@ import {} from "./Base/CellToHybrid.m.js";
 import {} from "./Base/CellSwitch.m.js";
 import {} from "./Base/CellReduce.m.js";
 import {promiseToCell} from "./Promise/CellPromise.m.js";
-import {cellEl} from "./El/CellEl.m.js";
+import {cellEl, cellEls} from "./El/CellEl.m.js";
 import {asCell} from "./As/AsCell.m.js";
 
 import	{ ConstantCell,constantCell,
@@ -32,7 +32,7 @@ export {
 	promiseToCell,
 	map,
 	lift, iLift,
-	cellEl,
+	cellEl, cellEls,
 	asCell,
 }
 
