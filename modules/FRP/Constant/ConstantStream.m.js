@@ -1,6 +1,5 @@
 import {Stream,RootStream} from "../Base/Stream.m.js";
 import {merge as basicMerge} from "../Base/StreamWithCell.m.js";
-import {} from "./StreamWithConstant.m.js";
 import {newRoot,newDeadRoot,joinRoots,joinRootsMap,partialRoot,compareRoots,same,overlapping,discrete} from "../Core/PushRoot.m.js";
 
 export {RootConstantStream,ConstantStream,constantStream,makeConstantStream,};
