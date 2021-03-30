@@ -1,9 +1,9 @@
-import {Cell} from "./Base/HybridCell.m.js";
+import {Cell, RootCell} from "./Base/HybridCell.m.js";
 import {lift, iLift} from "./Base/Lift.m.js";
 
 
 export {
-	Cell,
+	Cell, RootCell,
 	lift, iLift,
 }
 
