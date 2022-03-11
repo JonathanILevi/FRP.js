@@ -25,7 +25,7 @@ function lift(f) {
 		else {
 			let pushArgs = args.filter(a=>(a instanceof Cell || a instanceof HC.Cell));
 			let roots = [pushArgs[0]._root];
-			pushArgs.tail().forEach((a,i)=>{
+			pushArgs.tail.forEach((a,i)=>{
 				if (!pushArgs.slice(0,i+1).any(t=>compareRoots(a._root,t._root)==same))
 					roots.push(a._root);
 			});
@@ -71,7 +71,7 @@ function liftAny(f) {
 	return (...args)=>{
 		let pushArgs = args.filter(a=>(a instanceof Stream || a instanceof Cell || a instanceof HC.Cell));
 		let roots = [pushArgs[0]._root];
-		pushArgs.tail().forEach((a,i)=>{
+		pushArgs.tail.forEach((a,i)=>{
 			if (!pushArgs.slice(0,i+1).any(t=>compareRoots(a._root,t._root)==same))
 				roots.push(a._root);
 		});

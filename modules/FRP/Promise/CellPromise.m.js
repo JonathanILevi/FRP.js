@@ -24,7 +24,7 @@ Cell.prototype.thenLatest = function(newInitial) {
 		cancelLasts.push(then_(pValue, v=>{doCancel(); n._root.send(v);}));
 		function doCancel() {
 			localCancelLasts.forEach(cl=>cl());
-			cancelLasts.splice(0,cancelLasts.indexOf(localCancelLasts.last())+1);
+			cancelLasts.splice(0,cancelLasts.indexOf(localCancelLasts.last)+1);
 		}
 	});
 	return n;
