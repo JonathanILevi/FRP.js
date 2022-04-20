@@ -1,5 +1,5 @@
-import {Cell,cell,/*constant,*/} from "./Base/PushCell.m.js";
-import {EnumCell,enumCell,ConstantCell,constantCell,} from "./Constant/ConstantPushCell.m.js";
+import {Cell,cell,/*constant,*/} from "./Base/PullCell.m.js";
+import {EnumCell,enumCell,ConstantCell,constantCell,} from "./Constant/ConstantPullCell.m.js";
 import {map} from "./Base/Shared.m.js";
 import {lift, iLift} from "./Base/Lift.m.js";
 
