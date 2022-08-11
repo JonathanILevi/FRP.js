@@ -1,7 +1,7 @@
 import {Push} from "../Core/Push.m.js";
 import {newRoot,newDeadRoot,joinRoots,joinRootsMap,partialRoot,compareRoots,same,overlapping,discrete} from "../Core/PushRoot.m.js";
 
-export {RootStream,Stream,stream,never,/***merge,*/};
+export {Stream,stream,never,/***merge,*/};
 export {makeStream,makeNeverStream};
 
 class Stream extends Push {
@@ -33,19 +33,16 @@ class Stream extends Push {
 		let last = initial;
 		return this.map(v=>last=f(last,v));
 	}
-	merge(...streams) {
-		merge(this,...streams);
-	}
 }
-class RootStream extends Stream {
-	constructor() {
-		let nodeId = Symbol();
-		super(newRoot(nodeId),nodeId);
-	}
-	send(value) {
-		this._root.send(value);
-	}
-}
+////class RootStream extends Stream {
+////	constructor() {
+////		let nodeId = Symbol();
+////		super(newRoot(nodeId),nodeId);
+////	}
+////	send(value) {
+////		this._root.send(value);
+////	}
+////}
 class NeverStream extends Stream {
 	map(_) {
 		return makeNeverStream(this._root);
@@ -61,8 +58,12 @@ class NeverStream extends Stream {
 	}
 }
 
-function stream() {
-	return new RootStream();
+function stream(changeOut=null) {
+	let stream = makeStream();
+	stream.send = stream._root.send;
+	if (changeOut)
+		changeOut(stream._root.send);
+	return stream;
 }
 function never() {
 	return makeNeverStream();

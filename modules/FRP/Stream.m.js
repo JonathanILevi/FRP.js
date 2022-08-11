@@ -1,12 +1,12 @@
-import {RootStream,Stream,stream,never,/*merge,*/} from "./Base/Stream.m.js";
+import {Stream,stream,never,/*merge,*/} from "./Base/Stream.m.js";
 import {} from "./Base/StreamWithCell.m.js";
 import {} from "./Base/StreamToCell.m.js";
 import {promiseToStream} from "./Promise/StreamPromise.m.js";
 import {} from "./Base/StreamScanFilter.m.js";
 import {eventStream} from "./Event/EventStream.m.js";
 
-import	{ RootConstantStream,ConstantStream,constantStream
-	, RootEnumStream,EnumStream,enumStream
+import	{ ConstantStream,constantStream
+	, EnumStream,enumStream
 	, merge
 	} from "./Constant/ConstantStream.m.js";
 import {} from "./Constant/StreamWithConstant.m.js";
@@ -20,9 +20,9 @@ Stream.merge = function (...streams) {
 	merge(streams);
 }
 
-export	{ RootStream,Stream,stream,never
-	, RootConstantStream,ConstantStream,constantStream
-	, RootEnumStream,EnumStream,enumStream
+export	{ Stream,stream,never
+	, ConstantStream,constantStream
+	, EnumStream,enumStream
 	, promiseToStream
 	, merge
 	, map

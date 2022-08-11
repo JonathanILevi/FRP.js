@@ -1,7 +1,7 @@
 import {Push} from "../Core/Push.m.js";
 import {newRoot,newDeadRoot} from "../Core/PushRoot.m.js";
 
-export {RootCell,Cell,cell,constant,};
+export {Cell,cell,constantCell,};
 export {makeCell,};
 
 class Cell extends Push {
@@ -20,15 +20,15 @@ class Cell extends Push {
 		return this;
 	}
 }
-class RootCell extends Cell {
-	constructor(initial) {
-		let nodeId = Symbol();
-		super(initial,newRoot(nodeId),nodeId);
-	}
-	change(value) {
-		this._root.send(value);
-	}
-}
+////class RootCell extends Cell {
+////	constructor(initial) {
+////		let nodeId = Symbol();
+////		super(initial,newRoot(nodeId),nodeId);
+////	}
+////	change(value) {
+////		this._root.send(value);
+////	}
+////}
 class ConstantCell extends Cell {
 	get value() {
 		return this.initial;
@@ -42,10 +42,14 @@ class ConstantCell extends Cell {
 	}
 }
 
-function cell(initial) {
-	return new RootCell(initial);
+function cell(initial, changeOut=null) {
+	let cell = makeCell(initial);
+	cell.change = cell._root.send;
+	if (changeOut)
+		changeOut(cell._root.send);
+	return cell;
 }
-function constant(value) {
+function constantCell(value) {
 	return makeConstantCell(value);
 }
 

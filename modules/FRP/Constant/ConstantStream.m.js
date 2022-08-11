@@ -1,9 +1,9 @@
-import {Stream,RootStream} from "../Base/Stream.m.js";
+import {Stream} from "../Base/Stream.m.js";
 import {merge as basicMerge} from "../Base/StreamWithCell.m.js";
 import {newRoot,newDeadRoot,joinRoots,joinRootsMap,partialRoot,compareRoots,same,overlapping,discrete} from "../Core/PushRoot.m.js";
 
-export {RootConstantStream,ConstantStream,constantStream,makeConstantStream,};
-export {RootEnumStream,EnumStream,enumStream,makeEnumStream,};
+export {ConstantStream,constantStream,makeConstantStream,};
+export {EnumStream,enumStream,makeEnumStream,};
 export {NeverStream,neverStream,makeNeverStream,};
 export {merge,};
 
@@ -32,18 +32,18 @@ class EnumStream extends Stream {
 		merge(this,...streams);
 	}
 }
-class RootEnumStream extends EnumStream {
-	constructor(possibilities) {
-		let nodeId = Symbol();
-		super(possibilities,newRoot(nodeId),nodeId);
-	}
-	send(value) {
-		if (this.possibilities.indexOf(value)!=-1)
-			this._root.send(value);
-		else
-			console.assert(false);
-	}
-}
+////class RootEnumStream extends EnumStream {
+////	constructor(possibilities) {
+////		let nodeId = Symbol();
+////		super(possibilities,newRoot(nodeId),nodeId);
+////	}
+////	send(value) {
+////		if (this.possibilities.indexOf(value)!=-1)
+////			this._root.send(value);
+////		else
+////			console.assert(false);
+////	}
+////}
 
 
 class ConstantStream extends EnumStream {

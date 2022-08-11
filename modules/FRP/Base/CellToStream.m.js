@@ -8,6 +8,10 @@ Cell.prototype.changes = function() {
 Cell.prototype.snapshot = function(s,f=undefined) {
 	s.snapshot(s,f?(sv,cv)=>f(cv,sv):undefined);
 }
+Cell.prototype.scan = function(f=(previous,func)=>func(previous)) {
+	let last = this.initial;
+	return this.map(v=>last=f(last,v));
+}
 
 
 

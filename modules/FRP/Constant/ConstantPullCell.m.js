@@ -1,15 +1,15 @@
-import {Cell} from "../Base/PullCell.m.js";
+import {PullCell} from "../Base/PullCell.m.js";
 
-export {EnumCell,ConstantCell,enumCell,constantCell};
+export {EnumPullCell,ConstantPullCell,enumPullCell,constantPullCell};
 
-class EnumCell extends Cell {
+class EnumPullCell extends PullCell {
 	constructor (callback, possibilities) {
 		super(callback);
 		this._callback = callback;
 		this.possibilities = possibilities;
 	}
 	map(f) {
-		return new EnumCell(()=>f(callback()),this.possibilities.map(f));
+		return new EnumPullCell(()=>f(callback()),this.possibilities.map(f));
 	}
 	grab() {
 		let v = this._callback();
@@ -19,7 +19,7 @@ class EnumCell extends Cell {
 			console.assert(false);
 	}
 }
-class ConstantCell extends EnumCell {
+class ConstantPullCell extends EnumPullCell {
 	constructor(value) {
 		super(()=>console.assert(false,"Why is this being called?!"),[value]);
 	}
@@ -27,24 +27,24 @@ class ConstantCell extends EnumCell {
 		return this.possibilities[0];
 	}
 	map(f) {
-		return new ConstantCell(f(this.value));
+		return new ConstantPullCell(f(this.value));
 	}
 	grab() {
 		return this.value;
 	}
 }
 
-function enumCell(callback,possibilities) {
-	return new Cell(callback,possibilities);
+function enumPullCell(callback,possibilities) {
+	return new PullCell(callback,possibilities);
 }
-EnumCell.cell = enumCell;
-Cell.enum = enumCell;
+EnumPullCell.cell = enumPullCell;
+PullCell.enum = enumPullCell;
 
-function constantCell(value) {
-	return new Cell(()=>value);
+function constantPullCell(value) {
+	return new PullCell(()=>value);
 }
-ConstantCell.cell = constantCell;
-Cell.constant = constantCell;
+ConstantPullCell.cell = constantPullCell;
+PullCell.constant = constantPullCell;
 
 
 

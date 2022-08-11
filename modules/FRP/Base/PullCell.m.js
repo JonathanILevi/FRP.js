@@ -1,22 +1,22 @@
-export {Cell,cell,constant};
+export {PullCell,pullCell,constantPull};
 
-class Cell {
+class PullCell {
 	constructor (callback) {
 		this.grab = callback;
 	}
 	map(f) {
-		return new Cell(()=>f(callback()));
+		return new PullCell(()=>f(callback()));
 	}
 }
 
-function cell(callback) {
-	return new Cell(callback);
+function pullCell(callback) {
+	return new PullCell(callback);
 }
-function constant(value) {
-	return new Cell(()=>value);
+function constantPull(value) {
+	return new PullCell(()=>value);
 }
-Cell.cell = cell;
-Cell.constant = constant;
+PullCell.cell = pullCell;
+PullCell.constant = constantPull;
 
 
 

@@ -12,7 +12,7 @@ class Root {
 	unsafeRemoveNode(callback) {
 		this.nodes.remove(callback);
 	}
-	send(v) {
+	send = (v) => {
 		let scope = {[this.nodeIdentifier]:v};
 		this.sendScope(scope);
 	}

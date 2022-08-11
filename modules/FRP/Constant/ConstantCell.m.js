@@ -1,4 +1,4 @@
-import {Cell,RootCell,} from "../Base/Cell.m.js";
+import {Cell,} from "../Base/Cell.m.js";
 import {newRoot,newDeadRoot,joinRoots,joinRootsMap,partialRoot,compareRoots,same,overlapping,discrete} from "../Core/PushRoot.m.js";
 
 export {ConstantCell,constantCell,makeConstantCell,};

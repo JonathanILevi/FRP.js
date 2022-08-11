@@ -1,5 +1,4 @@
 import {Cell,makeCell} from "./Cell.m.js";
-import * as HC from "./HybridCell.m.js";
 
 Cell.prototype.impureSwitch = function() {
 	if (this.initial instanceof Cell)
@@ -15,7 +14,7 @@ Cell.prototype.impureSwitchC = function() {
 	this.initial._root.addNode(callback);
 	
 	this.changes().forEach((value)=>{
-		console.assert(value instanceof HC.Cell, "Must use `.caching()` on cells within a impureSwitch.");
+		console.assert(value.grab, "Must use `.caching()` on cells within a impureSwitch.");
 		lastRoot.unsafeRemoveNode(callback);
 		currentNID = value.nodeIdentifier;
 		lastRoot = value._root;

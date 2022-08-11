@@ -1,12 +1,12 @@
-import {Stream} from "./Stream.m.js";
-import {Cell} from "./Cell.m.js";
-////import {Cell as PullCell} from "./PullCell.m.js";
+import {Stream, stream, makeStream} from "./Stream.m.js";
+import {Cell, cell, makeCell} from "./Cell.m.js";
+////import {PullCell} from "./PullCell.m.js";
 import {joinRootsMap,compareRoots,same,overlapping,discrete} from "../Core/PushRoot.m.js";
 
 export {merge,};
 
 Stream.prototype.snapshot = function(c,f=(s,c)=>c) {
-	if (compareRoots(this._root, c._root)==same)
+	if (compareRoots(this._root, c._root) == same)
 		return c.changes();
 	if (c instanceof Cell)
 		c = c.cache();
@@ -28,11 +28,42 @@ function merge(...streams) {
 				console.assert("`merge` cannot work with more than one cell");
 		}
 	}
+	streams.forEach(s=>s.forEach(v=>console.log("i",v)));
 	let root = joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier]));
+	makeStream(root, nnid).forEach(v=>console.log("out",v));
 	if (cell == null)
-		return new Stream(root, nnid);
+		return makeStream(root, nnid);
 	else
-		return new Cell(cell.initial, root, nnid);
+		return makeCell(cell.initial, root, nnid);
+}
+
+Stream.prototype.merge = function(...streams) {
+	return merge(this, ...streams);
+}
+Cell.prototype.merge = function(...streams) {
+	return merge(this, ...streams);
+}
+
+Stream.prototype.scan = function(initial,f=(previous,func)=>func(previous)) {
+	if (initial instanceof Cell) {
+		let last = initial.initial;
+		initial.forEach(i=>last=i);
+		return merge(initial, this.map(v=>last=f(last,v)));
+	}
+	else {
+		let last = initial;
+		return this.map(v=>last=f(last,v));
+	}
+}
+
+Cell.prototype.changeable = function(changeOut=null) {
+	let s = stream().forEach(v=>console.log("a",v));
+	this.forEach(v=>console.log("aa",v))
+	let nc = this.merge(s).forEach(v=>console.log("b",v));
+	nc.change = s.send;
+	if (changeOut)
+		changeOut(s.send);
+	return nc;
 }
 
 
