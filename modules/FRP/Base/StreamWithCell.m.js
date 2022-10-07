@@ -28,7 +28,8 @@ function merge(...streams) {
 				console.assert("`merge` cannot work with more than one cell");
 		}
 	}
-	streams.forEach(s=>s.forEach(v=>console.log("i",v)));
+	streams.forEach((s,i)=>s.forEach(v=>console.log("i",v,i,"of",streams.length)));
+	streams.forEach((s,i)=>s._root.addNode(scope=>console.log("iscope",scope,scope[s.nodeIdentifier])));
 	let root = joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier]));
 	makeStream(root, nnid).forEach(v=>console.log("out",v));
 	if (cell == null)
