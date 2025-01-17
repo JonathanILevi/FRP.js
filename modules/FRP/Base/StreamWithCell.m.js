@@ -63,3 +63,12 @@ Cell.prototype.changeable = function(changeOut=null) {
 }
 
 
+
+Cell.prototype.filterChanges = function(f) {
+	let n = makeCell(this.initial, partialRoot(this._root),this.nodeIdentifier);
+	this._root.addNode(scope=>{
+		if (f(scope[this.nodeIdentifier])) 
+			n._root.sendScope(scope);
+	});
+	return n;
+}
