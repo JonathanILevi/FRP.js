@@ -26,9 +26,7 @@ function merge(...streams) {
 				cell = s;
 		}
 	}
-	streams.forEach(s=>s.forEach(v=>console.log("i",v)));
 	let root = joinRootsMap(nnid,streams.map(s=>[s._root,s.nodeIdentifier]));
-	makeStream(root, nnid).forEach(v=>console.log("out",v));
 	if (cell == null)
 		return makeStream(root, nnid);
 	else
