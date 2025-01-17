@@ -1,14 +1,16 @@
 import {} from "../Base/Cell.m.js";
 import {} from "../Base/CellToStream.m.js";
 
-/**	Creates an changing el from a cell in an el.
+/**	Creates a changing el from a cell in an el.
 	The reference to the returned element must be only held within the DOM (a parent element).
 	The returned element must never be taken out of the dom (it must always be in a parent element).
 */
 export
 function cellEl(elCell) {
-	let last = elCell.initial;
-	elCell.changes().forEach(el=>{last.parentElement.replaceChild(el,last);last=el;});
+	elCell.scan((last,el)=>{
+		last.parentElement?.replaceChild(el,last);
+		return el;
+	});
 	return elCell.initial;
 }
 
@@ -19,13 +21,12 @@ function cellEl(elCell) {
 */
 export
 function cellEls(elsCell) {
-	let last = elsCell.initial;
-	elsCell.changes().forEach(els=>{
-		last.slice(1).forEach(el=>el.parentElement.removeChild(el));
-		els.forEach(el=>last[0].parentElement.insertBefore(el,last[0]));
-		last[0].parentElement.removeChild(last[0]);
-		last = els;
+	elsCell.scan((last,els)=>{
+		last.slice(1).forEach(el=>el?.parentElement.removeChild(el));
+		els.forEach(el=>last[0].parentElement?.insertBefore(el,last[0]));
+		last[0].parentElement?.removeChild(last[0]);
+		return els;
 	});
 	return elsCell.initial;
 }
- 
+
