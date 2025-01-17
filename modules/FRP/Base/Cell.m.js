@@ -1,7 +1,7 @@
 import {Push} from "../Core/Push.m.js";
 import {newRoot,newDeadRoot} from "../Core/PushRoot.m.js";
 
-export {Cell,cell,constantCell,};
+export {Cell,cell,};
 export {makeCell,};
 
 class Cell extends Push {
@@ -20,28 +20,6 @@ class Cell extends Push {
 		return this;
 	}
 }
-////class RootCell extends Cell {
-////	constructor(initial) {
-////		let nodeId = Symbol();
-////		super(initial,newRoot(nodeId),nodeId);
-////	}
-////	change(value) {
-////		this._root.send(value);
-////	}
-////}
-class ConstantCell extends Cell {
-	get value() {
-		return this.initial;
-	}
-	map(f) {
-		return makeConstantCell(f(this.initial),this._root);
-	}
-	forEach(f) {
-		f(this.initial);
-		return this;
-	}
-}
-
 function cell(initial, changeOut=null) {
 	let cell = makeCell(initial);
 	cell.change = cell._root.send;
@@ -49,10 +27,6 @@ function cell(initial, changeOut=null) {
 		changeOut(cell._root.send);
 	return cell;
 }
-function constantCell(value) {
-	return makeConstantCell(value);
-}
-
 function makeCell(initial,root=null,nnid=null) {
 	if (nnid==null)
 		nnid = Symbol();
@@ -60,12 +34,4 @@ function makeCell(initial,root=null,nnid=null) {
 		root = newRoot(nnid);
 	return new Cell(initial,root,nnid);
 }
-function makeConstantCell(value,root=null,nnid=null) {
-	if (nnid==null)
-		nnid = Symbol();
-	if (root==null)
-		root = newDeadRoot();
-	return new ConstantCell(value,root,nnid);
-}
-
 
