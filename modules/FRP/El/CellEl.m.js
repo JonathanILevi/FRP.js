@@ -7,7 +7,7 @@ import {} from "../Base/CellToStream.m.js";
 */
 export
 function cellEl(elCell) {
-	elCell.scan((last,el)=>{
+	elCell.changes().scan(elCell.initial,(last,el)=>{
 		last.parentElement?.replaceChild(el,last);
 		return el;
 	});
@@ -21,7 +21,7 @@ function cellEl(elCell) {
 */
 export
 function cellEls(elsCell) {
-	elsCell.scan((last,els)=>{
+	elsCell.changes().scan(elsCell.initial,(last,els)=>{
 		last.slice(1).forEach(el=>el?.parentElement.removeChild(el));
 		els.forEach(el=>last[0].parentElement?.insertBefore(el,last[0]));
 		last[0].parentElement?.removeChild(last[0]);
