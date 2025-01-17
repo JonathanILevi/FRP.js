@@ -40,17 +40,26 @@ Cell.prototype.merge = function(...streams) {
 	return merge(this, ...streams);
 }
 
-Stream.prototype.scan = function(initial,f=(previous,func)=>func(previous)) {
-	if (initial instanceof Cell) {
-		let last = initial.initial;
-		initial.forEach(i=>last=i);
-		return merge(initial, this.map(v=>last=f(last,v)));
-	}
-	else {
-		let last = initial;
-		return this.map(v=>last=f(last,v));
-	}
+////Stream.prototype.scan = function(initial,f=(previous,func)=>func(previous)) {
+////	if (initial instanceof Cell) {
+////		let last = initial.initial;
+////		initial.forEach(i=>last=i);
+////		// Which actually makes sense?  This is a rather weird function.
+////		return merge(initial, this.map(v=>last=f(last,v)));
+////		return merge(initial.changes(), this.map(v=>last=f(last,v)));
+////		return merge(this.map(v=>last=f(last,v)));
+////	}
+////	else {
+////		let last = initial;
+////		return this.map(v=>last=f(last,v));
+////	}
+////}
+
+Cell.prototype.scan = function(initial,f=(previous,func)=>func(previous)) {
+	let last = initial;
+	return this.map(v=>last=f(last,v));
 }
+
 
 Cell.prototype.changeable = function(changeOut=null) {
 	let s = stream().forEach(v=>console.log("a",v));
