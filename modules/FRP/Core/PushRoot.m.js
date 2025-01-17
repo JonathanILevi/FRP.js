@@ -31,9 +31,9 @@ class JoinedRoot extends Root {
 	////unsafeRemoveNode(callback) {
 	////	this.roots.forEach(r=>r.unsafeRemoveNode(callback));
 	////}
-	send() {
-		console.assert(false);
-	}
+	////send() {
+	////	console.assert(false);
+	////}
 	////sendScope(scope) {
 	////	console.log("sendScope Joined");
 	////	this.roots.forEach(r=>r.sendScope(scope));
@@ -44,9 +44,9 @@ class PartialRoot extends Root {
 		super(root.nodeIdentifier);
 		this.root = root;
 	}
-	send() {
-		console.assert(false);
-	}
+	////send() {
+	////	console.assert(false);
+	////}
 }
 class DeadRoot {
 	addNode(callback) {}
@@ -75,9 +75,8 @@ function joinRootsMap(nodeIdentifier,rootIdentifierPairs) {
 	////);
 	let newRoot;
 	let roots = rootIdentifierPairs.concatMap(([r,id])=>{
-		let roots = r.constructor == JoinedRoot ? r.roots : [r];
-		roots.forEach(r=>r.addNode(scope=>newRoot.sendScope({[nodeIdentifier]:scope[id]})));
-		return roots;
+		r.addNode(scope=>{console.log("scope",scope,id,scope[id]);newRoot.sendScope({[nodeIdentifier]:scope[id]})});
+		return r.constructor == JoinedRoot ? r.roots : [r];
 	});
 	newRoot = new JoinedRoot(roots,nodeIdentifier);
 	////if (roots.size>1)
