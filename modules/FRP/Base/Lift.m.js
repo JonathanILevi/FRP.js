@@ -10,6 +10,11 @@ function map(f, m) {
 	m.map(f);
 }
 
+// `lift` appears to have problems.
+// `lift` didn't have the `forStreamRoot` function, but it called it.
+// `liftAny` always returns a cell, even when it is passed only streams.
+// `lift` should return a stream if there is one stream, and a cell if there are any cells, and assert if there are multiple incompatible streams
+// `liftAny` should return a stream if only has streams and no cells (which begs when it would be used, like a goofy merge with a function call that knows which stream the value comes from, or for overlapping roots (which merge will assert on))
 
 function lift(f) {
 	return (...args)=>{
@@ -23,6 +28,27 @@ function lift(f) {
 		else {
 			return liftAny(f)(...args);
 		}
+		function forStreamRoot(streamRoot, nnid, newRoot) {
+			let retrieveArgs = args.map(a=>{
+				if (a instanceof PullCell)
+					return _=>a.grab();
+				else if (a instanceof Cell || a instanceof Stream) {
+					if (compareRoots(a._root,streamRoot)==same)
+						return scope=>scope[a.nodeIdentifier];
+					else if (a instanceof Cell) {
+						a.caching();
+						return a.grab;
+					}
+					else {
+						return _=>undefined;
+					}
+				}
+				else {// Non-FRP value, use as constant.
+					return _=>a;
+				}
+			});
+			streamRoot.addNode(scope=>newRoot.sendScope({[nnid]:f(...retrieveArgs.map(ra=>ra(scope)))}));
+		}
 	};
 }
 
@@ -30,7 +56,7 @@ function iLift(...args) {
 	return (f)=>lift(f)(...args);
 }
 
-/// List but allowing multiple streams.
+/// Lift but allowing multiple streams.
 /// Extra streams will be undefined with incompatible root.
 function liftAny(f) {
 	return (...args)=>{
