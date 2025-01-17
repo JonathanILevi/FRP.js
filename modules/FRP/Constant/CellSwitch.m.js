@@ -9,32 +9,37 @@ EnumCell.prototype.switch = function() {
 		return this.switchS();
 	console.assert(false);
 }
+// I don't think this was coded right at all.  This new code has not been tested.
+// Also note, that this does no pausing of unused cellThreads, as that and that never happens in other functions, so that is normal.  It would make sense to make pausable cells, but then would only work their value would be recalculated whenever it would need resumed. (Basically the switch would have to include a partial root of each pausable inner cell)
 EnumCell.prototype.switchC = function() {
 	let nnid = Symbol();
 	let current = this.initial;
+	let n = makeCell(this.initial.initial,joinRoots(nnid,[this._root,...this.possibilities.map(p=>p._root)]),nnid);
 	
-	this._root.addNode(scope=>{
-		current = scope[this.nodeIdentifier];
-		scope[nnid] = scope[this.nodeIdentifier].grab();
+	this.map(v=>{
+		this.current = v;
+		n._root.send(v.grab());
 	});
-	
-	let valueRoots = this.possibilities.map(v=>{
-		let vRoot = partialRoot(v._root);
-		v._root.addNode(scope=>{
-			if (v==current) {
-				scope[nnid] = scope[v.nodeIdentifier];
-				vRoot.sendScope(scope);
-			}
-		});
-		return vRoot;
-	});
-	
-	let n = makeCell(this.initial.initial,joinRoots(nnid,[this._root,...valueRoots]),nnid);
+	this.possibilities.forEach(p=>p.forEach(pv=>{
+		n._root.send(pv);
+	}));
 	
 	return n;
 }
+// Modified form new switchC, also not tested.
 EnumCell.prototype.switchS = function() {
-	console.assert(false,"Unimplemented");
+	let nnid = Symbol();
+	let current = this.initial;
+	let n = makeStream(joinRoots(nnid,this.possibilities.map(p=>p._root)),nnid);
+	
+	this.map(v=>{
+		this.current = v;
+	});
+	this.possibilities.forEach(p=>p.forEach(pv=>{
+		n._root.send(pv);
+	}));
+	
+	return n;
 }
 
 
