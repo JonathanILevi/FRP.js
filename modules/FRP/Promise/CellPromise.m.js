@@ -1,4 +1,5 @@
 import {Cell,makeCell} from "../Base/Cell.m.js";
+import {makeStream} from "../Base/Stream.m.js";//for thenWaiting
 
 export {promiseToCell};
 
@@ -34,6 +35,18 @@ Cell.prototype.thenLatest = function(newInitial) {
 		promise.then((...args)=>{if(notCanceled) f(...args);});
 		return ()=>notCanceled=false;
 	}
+}
+Cell.prototype.thenWaiting = function() {
+	let pStream = makeStream();
+	
+	let latest = null;
+	this.forEach(([waitingValue, pValue])=>{
+		latest = pValue;
+		if (pValue)
+			pValue.then(v=>{if (latest==pValue) pStream._root.send(v);});
+	});
+	
+	return this.map(([waitingValue,pValue])=>waitingValue).merge(pStream);
 }
 
 function promiseToCell(initial,promise) {
