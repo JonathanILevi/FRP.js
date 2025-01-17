@@ -48,6 +48,18 @@ Cell.prototype.thenWaiting = function() {
 	
 	return this.map(([waitingValue,pValue])=>waitingValue).merge(pStream);
 }
+Cell.prototype.thenMaybeWaiting = function() {
+	let pStream = makeStream();
+	
+	let latest = null;
+	this.forEach(([waitingValue, pValue])=>{
+		latest = pValue;
+		if (pValue)
+			pValue.then(v=>{if (latest==pValue) pStream._root.send(v);});
+	});
+	
+	return this.map(([waitingValue,pValue])=>waitingValue).filerChanges(v=>v!==undefined).merge(pStream);
+}
 
 function promiseToCell(initial,promise) {
 	let n = makeCell(initial);
