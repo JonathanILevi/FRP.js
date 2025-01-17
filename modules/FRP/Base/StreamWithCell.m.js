@@ -22,10 +22,8 @@ function merge(...streams) {
 	let cell = null;
 	for (let s of streams) {
 		if (s instanceof Cell) {
-			if (cell == null)
+			console.assert(cell == null, "`merge` cannot work with more than one cell");
 				cell = s;
-			else
-				console.assert("`merge` cannot work with more than one cell");
 		}
 	}
 	streams.forEach(s=>s.forEach(v=>console.log("i",v)));
