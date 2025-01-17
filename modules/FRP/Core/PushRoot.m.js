@@ -75,7 +75,7 @@ function joinRootsMap(nodeIdentifier,rootIdentifierPairs) {
 	////);
 	let newRoot;
 	let roots = rootIdentifierPairs.concatMap(([r,id])=>{
-		r.addNode(scope=>{console.log("scope",scope,id,scope[id]);newRoot.sendScope({[nodeIdentifier]:scope[id]})});
+		r.addNode(scope=>newRoot.sendScope({[nodeIdentifier]:scope[id]}));
 		return r.constructor == JoinedRoot ? r.roots : [r];
 	});
 	newRoot = new JoinedRoot(roots,nodeIdentifier);
