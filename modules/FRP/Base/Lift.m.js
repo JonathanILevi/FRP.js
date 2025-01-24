@@ -15,40 +15,15 @@ function map(f, m) {
 // `liftAny` always returns a cell, even when it is passed only streams.
 // `lift` should return a stream if there is one stream, and a cell if there are any cells, and assert if there are multiple incompatible streams
 // `liftAny` should return a stream if only has streams and no cells (which begs when it would be used, like a goofy merge with a function call that knows which stream the value comes from, or for overlapping roots (which merge will assert on))
-
+//
+// UPDATE
+// I used this function...and it wasn't working right.  I fixed it and it has now been tested.  (Leaving old comments for posterity sake for now.)
 function lift(f) {
 	return (...args)=>{
 		let streamArgs = args.filter(a=>a instanceof Stream);
-		if (streamArgs.length > 0) {
+		if (streamArgs.length > 0)
 			console.assert(streamArgs.length==1 || compareRoots(...streamArgs)==same);
-			let n = makeStream(streamArgs[0]._root,Symbol());
-			forStreamRoot(n._root, n.nodeIdentifier, n._root);
-			return n;
-		}
-		else {
-			return liftAny(f)(...args);
-		}
-		function forStreamRoot(streamRoot, nnid, newRoot) {
-			let retrieveArgs = args.map(a=>{
-				if (a instanceof PullCell)
-					return _=>a.grab();
-				else if (a instanceof Cell || a instanceof Stream) {
-					if (compareRoots(a._root,streamRoot)==same)
-						return scope=>scope[a.nodeIdentifier];
-					else if (a instanceof Cell) {
-						a.caching();
-						return a.grab;
-					}
-					else {
-						return _=>undefined;
-					}
-				}
-				else {// Non-FRP value, use as constant.
-					return _=>a;
-				}
-			});
-			streamRoot.addNode(scope=>newRoot.sendScope({[nnid]:f(...retrieveArgs.map(ra=>ra(scope)))}));
-		}
+		return liftAny(f)(...args);
 	};
 }
 
@@ -103,3 +78,4 @@ function liftAny(f) {
 		}
 	};
 }
+
