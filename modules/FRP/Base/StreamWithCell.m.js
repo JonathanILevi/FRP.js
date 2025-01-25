@@ -59,6 +59,19 @@ Cell.prototype.scan = function(initial,f=(previous,func)=>func(previous)) {
 	let last = initial;
 	return this.map(v=>last=f(last,v));
 }
+Cell.prototype.scan1 = function(f=(previous,func)=>func(previous)) {
+	let last = this.initial;
+	return this.changes().map(v=>last=f(last,v)).hold(last);
+}
+
+Cell.prototype.forEachScan = function(initial,f=(previous,func)=>func(previous)) {
+	let last = initial;
+	return this.forEach(v=>f(last,last=v));
+}
+Cell.prototype.forEachScan1 = function(f=(previous,func)=>func(previous)) {
+	let last = this.initial;
+	return this.changes().forEach(v=>f(last,last=v)).hold(last);
+}
 
 
 Cell.prototype.changeable = function(changeOut=null) {

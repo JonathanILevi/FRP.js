@@ -33,6 +33,10 @@ class Stream extends Push {
 		let last = initial;
 		return this.map(v=>last=f(last,v));
 	}
+	forEachScan(initial,f=(previous,func)=>func(previous)) {
+		let last = initial;
+		return this.forEach(v=>f(last,last=v));
+	}
 }
 ////class RootStream extends Stream {
 ////	constructor() {
