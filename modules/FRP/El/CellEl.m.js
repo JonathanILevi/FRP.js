@@ -30,3 +30,14 @@ function cellEls(elsCell) {
 	return elsCell.initial;
 }
 
+export
+function cellElClass(c) {
+	return el=>{
+		c.forEachScan(undefined,(last,cls)=>{
+			if (last)
+				el.classList.remove(last);
+			if (cls)
+				el.classList.add(cls);
+		})
+	}
+}
