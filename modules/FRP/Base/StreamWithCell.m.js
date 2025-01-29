@@ -75,9 +75,8 @@ Cell.prototype.forEachScan1 = function(f=(previous,func)=>func(previous)) {
 
 
 Cell.prototype.changeable = function(changeOut=null) {
-	let s = stream().forEach(v=>console.log("a",v));
-	this.forEach(v=>console.log("aa",v))
-	let nc = this.merge(s).forEach(v=>console.log("b",v));
+	let s = stream();
+	let nc = this.merge(s);
 	nc.change = s.send;
 	if (changeOut)
 		changeOut(s.send);
