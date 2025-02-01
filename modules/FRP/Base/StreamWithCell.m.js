@@ -83,6 +83,24 @@ Cell.prototype.changeable = function(changeOut=null) {
 	return nc;
 }
 
+Cell.prototype.hiddenChangeable = function(hiddenChangeOut=null) {
+	let hiddenChangesS = stream();
+	let combinedC = this.merge(hiddenChangesS);
+	combinedC.unhidden = this;
+	combinedC.hiddenChange = hiddenChangesS.send;
+	combinedC.change = this.change.bind(this);
+	if (hiddenChangeOut)
+		hiddenChangeOut(hiddenChangesS.send);
+	return combinedC;
+}
+
+/*
+cell
+cell.map all
+cell.change all
+cell.hiddenChange
+cell.unhidden
+*/
 
 
 Cell.prototype.filterChanges = function(f) {
